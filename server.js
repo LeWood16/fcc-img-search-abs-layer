@@ -12,17 +12,24 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname+'/index.html'));
 });
 
-
+app.get(/a/, function (req, res) {
+  // res.setHeader('content-type', 'plain/text');
+  var foo = {bar: "bar", baz: "baz"};
+  res.json(foo);
+});
 
 app.get('/search', function(req,res){
   res.send('search route');
 });
 
+
+
 app.get('/search/*', function(req, res, next) {
-  // res.setHeader('content-type', 'plain/text');
+
+//  res.setHeader('content-type', 'text/plain');
   var type = typeof(res);
   var reqParams = req.params;
-  res.send(type == reqParams);
+  res.json(req.params);
 });
 
 
