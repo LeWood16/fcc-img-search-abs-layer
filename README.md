@@ -9,4 +9,4 @@ to a given search string.
 X-I can paginate through the responses by adding a ?offset=2 parameter to the URL.
 (defaults to 2)
 
--I can get a list of the most recently submitted search strings.
+X-I can get a list of the most recently submitted search strings.

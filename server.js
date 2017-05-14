@@ -46,11 +46,6 @@ app.get('/search/:terms', function(req, res) {
     });
   });
 });
-      
-    
-
-
-
 
 
 app.get('/search', function(req, res, next) {
