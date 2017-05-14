@@ -9,7 +9,7 @@
     "url": "https://github.com/LeWood16/fcc-img-search-abs-layer"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "gulp m",
     "watch": "gulp watch"
   },

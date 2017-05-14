@@ -89,7 +89,6 @@ function logSearch(searchTerms){
   // instantiate mongoose model inside function
   let Search = mongoose.model('Search', schema, 'searches');
   
-  
   // create date object
   let time = new Date();
   time = time.toISOString();
