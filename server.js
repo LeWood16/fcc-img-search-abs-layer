@@ -1,29 +1,114 @@
 'use strict';
 var express = require('express');
 var path = require('path');
-var accountKey = 'npCUoIflwPpdgKb1AC67R9K9LpY8N8+beWni+8T85QE';
-var Bing = require('node-bing-api')({ accKey: accountKey });
+var mongoose = require('mongoose');
+var schema = require('./schema');
 
+// Retrieve
+var MongoClient = require('mongodb').MongoClient;
+var Search = mongoose.model('Search', schema, 'test');
+
+
+
+
+
+var googleIms = require('google-ims');
+let searchID = '018394045321279107056:ubskww0in80';
+let apiKey = 'AIzaSyC_KNgL_v1834lScrW9kaf2dJRSymbnk24';
+let client = googleIms(searchID, apiKey);
 
 var app = express();
 
 
-app.get('/search/:terms', function(req, res, next) {
-  var terms = req.params;
-  res.send(terms);
+// IMPORTANT: make db insertion into function, then insert into both
+// default pagination and custom pagination routes, to keep your app DRY
+
+// this route allows custom pagination
+app.get('/search/:terms' + '?offset=:num', function(req, res){
+  var terms = req.params.terms;
+  var offsetNum = req.params.num;
+  terms = terms.toString();
+  client.search(terms, {
+    page: offsetNum, // 10 results per page 
+}).then(function (images) {
+    images.forEach(function(i, e, a) {
+        res.json(images);
+    });
+});
 });
 
-
-app.get('/search', function(req, res, next){
-  Bing.images("Ninja Turtles", {
-  top: 15,   // Number of results (max 50) 
-  skip: 3    // Skip first 3 result 
-  }, function(error, res, body){
-    console.log(body);
-  }), next();
-  res.send('search successful');
+// search terms route
+app.get('/search/:terms', function(req, res){
+  var terms = req.params.terms;
+  terms = terms.toString();
   
+  // Connect to the db
+  MongoClient.connect("mongodb://localhost:27017/test", function(err, db) {
+  if(!err) {
+    
+    // create searches collection if it doesn't exist already
+    db.createCollection('searches', {strict:true}, function(err, collection) {});
+    console.log("searches collection created!");
+    
+    // create model instance for db insertion
+    var search = new Search({
+      term: terms,
+      when: Date.now()
+    });
+    
+    // insert search instance into database, then close database
+    db.collection.insert(search);
+  
+    db.close();
+  
+  
+  // once database work is done, we search!
+  client.search(terms, {
+    page: 2, // 10 results per page 
+}).then(function (images) {
+    images.forEach(function(i, e, a) {
+        res.json(images);
+    });
 });
+
+
+app.get('/search', function(req, res, next) {
+res.setHeader('content-type', 'text/plain');
+res.send("please include search terms at the end of the route (i.e. '/search/<terms>')");
+});
+
+
+app.get('/latest', function(req, res, next) {
+// Connect to the db
+MongoClient.connect("mongodb://localhost:27017/test", function(err, db) {
+  if(!err) {
+    
+    // create searches collection if it doesn't exist already
+    db.createCollection('searches', {strict:true}, function(err, collection) {});
+    console.log("searches collection created!");
+    
+    // create model instance for db insertion
+    var search = new Search({
+      term: "test term",
+      when: Date.now()
+    });
+    db.collection.insert(search);
+
+    var history = db.collection('searches').find({});
+    res.send(history);
+  }
+});
+
+
+
+});
+
+
+
+
+
+
+
 
 
 app.get('/', function (req, res) {

@@ -17,8 +17,10 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.15.2",
-    "google-images": "^2.1.0",
-    "node-bing-api": "^3.2.1",
+    "google-ims": "^1.1.4",
+    "mongo": "^0.1.0",
+    "mongodb": "^2.2.26",
+    "mongoose": "^4.9.9",
     "path": "^0.12.7"
   },
   "devDependencies": {
