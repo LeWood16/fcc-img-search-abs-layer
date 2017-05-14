@@ -2,7 +2,7 @@
   "name": "img_search_abstraction_layer",
   "version": "1.0.0",
   "description": "a full stack image search layer for freeCodeCamp",
-  "main": "index.html",
+  "main": "server.js",
   "keywords": [],
   "repository": {
     "type": "git",
