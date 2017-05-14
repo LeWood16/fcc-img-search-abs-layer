@@ -55,7 +55,7 @@ app.get('/search', function(req, res, next) {
 
 
 app.get('/latest', function(req, res, next) {
-  MongoClient.connect("mongodb://localhost:27017/test", function(err, db) {
+  MongoClient.connect("mongodb://client_user:client_password@ds143071.mlab.com:43071/image-search-abstraction-layer", function(err, db) {
     if (!err) {
       db.collection('searches').find({}, { _id: 0 }).toArray(function(err, searches) {
         
@@ -99,7 +99,7 @@ function logSearch(searchTerms){
   });
 
   // Connect to the db
-  MongoClient.connect("mongodb://localhost:27017/test", function(err, db) {
+  MongoClient.connect("mongodb://client_user:client_password@ds143071.mlab.com:43071/image-search-abstraction-layer", function(err, db) {
   if (!err) {
        
     // create searches collection as soon as first document is inserted
